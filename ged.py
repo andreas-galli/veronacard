@@ -1,5 +1,5 @@
 import copy
-# Implementazione Algoritmo di Similarità tra Grafi WEIGHTED GRAPH EDIT DISTANCE
+# Implementazione Algoritmo di Similarità tra Grafi GRAPH EDIT DISTANCE (approssimativo), e di due sue varianti
 def edit_weight_cost(edge1, edge2):
     return abs(edge1['weight'] - edge2['weight'])
 
@@ -27,6 +27,7 @@ def get_ged(g1, g2):
     return total_cost
 
 def get_absolute_weighted_ged(g1, g2):
+    # Non considero le differenze strutturali, ma solo differenze sui pesi di archi comuni
     total_cost = 0
 
     if len(g1.nodes()) == 0 or len(g2.nodes()) == 0:
@@ -42,6 +43,7 @@ def get_absolute_weighted_ged(g1, g2):
     return total_cost
 
 def get_relative_weighted_ged(g1, g2):
+    # Non considero le differenze strutturali, ma solo differenze sui pesi di archi comuni
     total_cost = 0
 
     if len(g1.nodes()) == 0 or len(g2.nodes()) == 0:

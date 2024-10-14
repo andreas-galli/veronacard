@@ -28,13 +28,13 @@ df = pd.read_csv('log_veronaCard.csv')
 POIs = sorted(df.iloc[:, 4].unique())
 
 # Mantengo solo le tuple di data 01/01/2019
-date1 = '2019-01-03'
+date1 = '2018-04-07'
 df1 = df[df.iloc[:, 0] == date1]
 
 matrix1 = Matrix.get_matrix(df1, POIs)
 graph1 = Graph.get_graph(df1)
 
-date2 = '2019-01-07'
+date2 = '2019-09-07'
 df2 = df[df.iloc[:, 0] == date2]
 
 matrix2 = Matrix.get_matrix(df2, POIs)
@@ -43,17 +43,13 @@ graph2 = Graph.get_graph(df2)
 
 print(f"{date1}: {matrix1.sum().sum()} people\n{date2}: {matrix2.sum().sum()} people")
 
-print("GED: ", nx.graph_edit_distance(graph1, graph2, timeout=20))
+print("\nGED (networkx): ", nx.graph_edit_distance(graph1, graph2, timeout=30))
 
 print("Approx. GED: ", get_ged(graph1, graph2))
 
 print("Absolute Weighted GED: ", get_absolute_weighted_ged(graph1, graph2))
 
-print("Relative Weighted GED: ", get_relative_weighted_ged(graph1, graph2))
+print("Relative Weighted GED: ", round(get_relative_weighted_ged(graph1, graph2), 2))
 
-Graph.get_graph_image([graph1, graph2])
-
-#get_matrices_percentage_diff_table_fig(matrix1, matrix2, date1, date2)
-
-#niccolomarastoni gh
+Graph.get_graph_image([graph1, graph2], date1, date2)
 
