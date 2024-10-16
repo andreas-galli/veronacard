@@ -27,29 +27,40 @@ df = pd.read_csv('log_veronaCard.csv')
 
 POIs = sorted(df.iloc[:, 4].unique())
 
-# Mantengo solo le tuple di data 01/01/2019
-date1 = '2018-04-07'
-df1 = df[df.iloc[:, 0] == date1]
+# Mantengo tutte le tuple escludendo l'anno 2020
+df_2 = df[(df.iloc[:, 0] >= '2014-01-01') & (df.iloc[:, 0] <= '2019-12-31')]
 
-matrix1 = Matrix.get_matrix(df1, POIs)
-graph1 = Graph.get_graph(df1)
+unique_dates = sorted(df_2.iloc[:, 0].unique())
 
-date2 = '2019-09-07'
-df2 = df[df.iloc[:, 0] == date2]
+graphs = {}
 
-matrix2 = Matrix.get_matrix(df2, POIs)
+for date in unique_dates:
+    df_date = df_2[df_2.iloc[:, 0] == date]
+    graphs[date] = Graph.get_graph(df_date)
 
-graph2 = Graph.get_graph(df2)
+results = []
 
-print(f"{date1}: {matrix1.sum().sum()} people\n{date2}: {matrix2.sum().sum()} people")
+# Confronto ogni coppia di grafi presente nel dataset e salvo i risultati in un csv
+with open('results.csv', 'w') as file:
+    for i in range(len(unique_dates)):
+        for j in range(i + 1, len(unique_dates)):
+            date1 = unique_dates[i]
+            date2 = unique_dates[j]
+            graph1 = graphs[date1]
+            graph2 = graphs[date2]
 
-print("\nGED (networkx): ", nx.graph_edit_distance(graph1, graph2, timeout=30))
+            approx_ged = get_ged(graph1, graph2)
+            abs_wGed = get_absolute_weighted_ged(graph1, graph2)
+            rel_wGed = round(get_relative_weighted_ged(graph1, graph2))
 
-print("Approx. GED: ", get_ged(graph1, graph2))
+            print(f'{date1}, {date2}: {rel_wGed}')
 
-print("Absolute Weighted GED: ", get_absolute_weighted_ged(graph1, graph2))
-
-print("Relative Weighted GED: ", round(get_relative_weighted_ged(graph1, graph2), 2))
-
-Graph.get_graph_image([graph1, graph2], date1, date2)
-
+            results.append({
+                'date1': date1,
+                'date2': date2, 
+                'GED': approx_ged,
+                'ABS_WGED': abs_wGed,
+                'REL_WGED': rel_wGed
+            })
+#results_df = pd.DataFrame(results).to_csv('results.csv', index=False)
+print("Risultati salvati nel file 'results.csv'")

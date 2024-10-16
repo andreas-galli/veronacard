@@ -1,5 +1,7 @@
-import copy
 # Implementazione Algoritmo di Similarità tra Grafi GRAPH EDIT DISTANCE (approssimativo), e di due sue varianti
+
+import copy
+
 def edit_weight_cost(edge1, edge2):
     return abs(edge1['weight'] - edge2['weight'])
 
