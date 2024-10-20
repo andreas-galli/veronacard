@@ -13,8 +13,6 @@ def abs_to_rev(m):
         return m
 
 def get_percentage_diff_matrix(m1, m2):
-    m1 = abs_to_rev(m1)
-    m2 = abs_to_rev(m2)
     return (m1 - m2) * 100
 
 def total_percentage_diff(m1, m2):

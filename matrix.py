@@ -25,9 +25,20 @@ class Matrix:
                 
                 # Se il POI è differente dal successivo incremento il peso dell' "arco"
                 if poi_prec != poi_succ:
-                    """ 1 2
-                    1   0 5       5 persone da POI 1 a POI 2 
-                    2   8 0       8 persone da POI 2 a POI 1
-                    """
                     matrix.loc[poi_prec, poi_succ] += 1
+        return matrix
+    
+    def get_matrix_from_csv(filename):
+        df = pd.read_csv(filename)
+        dates = sorted(df.iloc[:, 0].unique())
+        matrix = pd.DataFrame(0, dates, dates)
+
+        for row, i in df.iterrows():
+            date1 = df.iloc[row, 0]
+            date2 = df.iloc[row, 1]
+            value = round(df.iloc[row, 2] * 0.5 + df.iloc[row, 3] * 0.5)
+            matrix.loc[date1, date2] = value
+            matrix.loc[date2, date1] = value
+            print(value)
+        
         return matrix

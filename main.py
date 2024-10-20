@@ -1,32 +1,52 @@
 import pandas as pd         
 import networkx as nx   
 
+from clustering import clusterize
 from percentage_matrix_methods import *
 from ged import *
 from graph import Graph
 from matrix import Matrix
 from distanceBetwPOIs import Haversine
 
-# Crea un dizionario con numero del POI come chiave e (latitudine, longitudine) come valori
-poi_coords = {}
-
-# Leggo il CSV dei POI e le coordinate
-df_poi = pd.read_csv('poi_info.csv')
-
-for i, row in df_poi.iterrows():
-    poi_id = row['poi_id']
-    lat = row['latitude']
-    long = row['longitude']
-    poi_coords[poi_id] = (lat, long)
-
-# Test calcolo della distanza tra due punti avendo le coordinate
-#print("*Test Haversine* Distanza Arena - Casa di Giulietta = ", Haversine.haversine(poi_coords, 49, 61) , "km\n")
+"""Molte righe sono commentate poiché utili alla sola generazione di csv"""
 
 # Importo il CSV delle strisciate
 df = pd.read_csv('log_veronaCard.csv')
 
-POIs = sorted(df.iloc[:, 4].unique())
+graphs = []
+dates = []
 
+d1 = '2015-06-22'
+d2 = '2015-06-08'
+d3 = '2015-06-11'
+
+g1 = Graph.get_graph(df[df.iloc[:, 0] == d1])
+g2 = Graph.get_graph(df[df.iloc[:, 0] == d2])
+g3 = Graph.get_graph(df[df.iloc[:, 0] == d3])
+
+graphs.extend([g1, g2, g3])
+dates.extend([d1, d2, d3])
+Graph.get_graph_image(graphs, dates) 
+
+
+#clusterize()
+
+
+#GENERAZIONE DEL FILE distanceMatrix.csv e verifica del funzionamento
+"""
+distance_matrix = Matrix.get_matrix_from_csv('results_v2/results_v2.csv')
+distance_matrix.to_csv('results_v2/distanceMatrix.csv', header=True)
+
+# Leggi il CSV nella matrice delle distanze
+distance_matrix = pd.read_csv('results_v2/distanceMatrix.csv', index_col=0)
+
+# Mostra la matrice per verificare che sia correttamente caricata
+print(distance_matrix)
+"""
+
+
+#GENERAZIONE results_v2.csv
+"""
 # Mantengo tutte le tuple escludendo l'anno 2020
 df_2 = df[(df.iloc[:, 0] >= '2014-01-01') & (df.iloc[:, 0] <= '2019-12-31')]
 
@@ -41,7 +61,7 @@ for date in unique_dates:
 results = []
 
 # Confronto ogni coppia di grafi presente nel dataset e salvo i risultati in un csv
-with open('results.csv', 'w') as file:
+with open('results_v2.csv', 'w') as file:
     for i in range(len(unique_dates)):
         for j in range(i + 1, len(unique_dates)):
             date1 = unique_dates[i]
@@ -51,16 +71,15 @@ with open('results.csv', 'w') as file:
 
             approx_ged = get_ged(graph1, graph2)
             abs_wGed = get_absolute_weighted_ged(graph1, graph2)
-            rel_wGed = round(get_relative_weighted_ged(graph1, graph2))
 
-            print(f'{date1}, {date2}: {rel_wGed}')
+            print(f'{date1}, {date2}: {abs_wGed}')
 
             results.append({
-                'date1': date1,
-                'date2': date2, 
+                'DATE1': date1,
+                'DATE2': date2, 
                 'GED': approx_ged,
-                'ABS_WGED': abs_wGed,
-                'REL_WGED': rel_wGed
+                'ABS_WGED': abs_wGed
             })
-#results_df = pd.DataFrame(results).to_csv('results.csv', index=False)
-print("Risultati salvati nel file 'results.csv'")
+results_df = pd.DataFrame(results).to_csv('results_v2.csv', index=False)
+print("Risultati salvati nel file 'results_v2.csv'")
+"""

@@ -42,23 +42,11 @@ def get_absolute_weighted_ged(g1, g2):
         edge1 = g1.get_edge_data(edge[0], edge[1])
         edge2 = g2.get_edge_data(edge[0], edge[1])
         total_cost += edit_weight_cost(edge1, edge2)
-    return total_cost
 
-def get_relative_weighted_ged(g1, g2):
-    # Non considero le differenze strutturali, ma solo differenze sui pesi di archi comuni
-    total_cost = 0
+    for edge in (edges_g1 - edges_g2):
+        total_cost +=g1.get_edge_data(edge[0], edge[1])['weight']
 
-    if len(g1.nodes()) == 0 or len(g2.nodes()) == 0:
-        return -1
+    for edge in (edges_g2 - edges_g1):
+        total_cost += g2.get_edge_data(edge[0], edge[1])['weight']
 
-    g1_rel = abs_to_rev_graph_weights(g1)
-    g2_rel = abs_to_rev_graph_weights(g2)
-
-    edges_g1 = {(u, v) for u, v, data in g1_rel.edges(data=True)}
-    edges_g2 = {(u, v) for u, v, data in g2_rel.edges(data=True)}
-    common_edges = edges_g1 & edges_g2
-    for edge in common_edges:
-        edge1 = g1_rel.get_edge_data(edge[0], edge[1])
-        edge2 = g2_rel.get_edge_data(edge[0], edge[1])
-        total_cost += edit_weight_cost(edge1, edge2)
     return total_cost

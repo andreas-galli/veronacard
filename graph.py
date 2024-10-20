@@ -33,14 +33,15 @@ class Graph:
                         graph.add_edge(int(poi_prec), int(poi_succ), weight=1)    # Creo l'arco
         return graph   
         
-    def get_graph_image(graphs, date1, date2):
-        date = date1
-        for i, graph in enumerate(graphs):
+    def get_graph_image(graphs, dates):
+        for i, (graph, date) in enumerate(zip(graphs, dates)):
             # Dimensione del grafo
-            plt.figure(figsize=(12, 8)).canvas.manager.set_window_title(f'{date} GRAPH')
-
-            if date == date1:
-                date = date2
+            n_movements = 0
+            for (node1, node2, dati) in graph.edges(data=True):
+                peso = dati['weight']
+                n_movements += peso
+            
+            plt.figure(figsize=(12, 8)).canvas.manager.set_window_title(f'{date} GRAPH, {n_movements} total movements')
             
             # Layout del grafo
             pos = nx.circular_layout(graph)
@@ -53,7 +54,6 @@ class Graph:
 
             for (node1, node2, dati) in graph.edges(data=True):
                 peso = dati['weight']
-                
                 if graphs[i].has_edge(node2, node1):  # Se esiste anche l'arco inverso (B -> A)
                     if node1 < node2:
                         # Disegna l'arco dritto A -> B
@@ -67,39 +67,3 @@ class Graph:
                     nx.draw_networkx_edge_labels(graph, pos, edge_labels={(node1, node2): peso}, font_size=12)
         plt.subplots_adjust()
         plt.show()
-
-""" Sezione relativa alla visualizzazione grafica del grafo
-        # Dimensione del grafo
-        #plt.figure(figsize=(12, 8)) 
-
-        # Layout del grafo
-        #pos = nx.circular_layout(graph)
-
-        # Etichette dei pesi
-        #edge_labels = nx.get_edge_attributes(graph, 'weight')
-
-        # Disegno i nodi
-        #nx.draw(graph, pos, with_labels=True, node_size=5000, node_color='skyblue', font_size=13, font_weight='bold', edge_color='black')
-
-        # Disegno gli archi con curvatura solo se esistono due archi tra due nodi
-        for (node1, node2, dati) in graph.edges(data=True):
-            peso = dati['weight']
-            
-            if graph.has_edge(node2, node1):  # Se esiste anche l'arco inverso (B -> A)
-                if node1 < node2:
-                    # Disegna l'arco dritto A -> B
-                    nx.draw_networkx_edges(graph, pos, edgelist=[(node1, node2)], edge_color='black', arrows=True, arrowstyle='-|>', arrowsize=20)
-                    nx.draw_networkx_edge_labels(graph, pos, edge_labels={(node1, node2): peso}, font_size=12)
-                else:
-                    # Disegna l'arco curvo B -> A
-                    nx.draw_networkx_edges(graph, pos, edgelist=[(node2, node1)], connectionstyle="arc3,rad=0.15", edge_color='black', arrows=True, arrowstyle='-|>', arrowsize=20)
-                    nx.draw_networkx_edge_labels(graph, pos, edge_labels={(node2, node1): peso}, font_size=12)
-            else:
-                # Se c'è solo un arco tra due nodi, arco dritto
-                nx.draw_networkx_edges(graph, pos, edgelist=[(node1, node2)], edge_color='black', arrows=True, arrowstyle='-|>', arrowsize=20)
-                nx.draw_networkx_edge_labels(graph, pos, edge_labels={(node1, node2): peso}, font_size=12)
-
-        #plt.title("Grafo relativo al cambio dei POI")
-        #plt.show()
-""" 
-        
