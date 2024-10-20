@@ -2,11 +2,11 @@ import pandas as pd
 import networkx as nx   
 
 from clustering import clusterize
-from percentage_matrix_methods import *
 from ged import *
 from graph import Graph
 from matrix import Matrix
 from distanceBetwPOIs import Haversine
+from weather import get_weather_by_date
 
 """Molte righe sono commentate poiché utili alla sola generazione di csv"""
 
@@ -28,6 +28,10 @@ graphs.extend([g1, g2, g3])
 dates.extend([d1, d2, d3])
 Graph.get_graph_image(graphs, dates) 
 
+
+get_weather_by_date(d1)
+get_weather_by_date(d2)
+get_weather_by_date(d3)
 
 #clusterize()
 
