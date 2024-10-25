@@ -28,7 +28,7 @@ class Matrix:
                     matrix.loc[poi_prec, poi_succ] += 1
         return matrix
     
-    def get_matrix_from_csv(filename):
+    def get_GED_matrix_from_csv(filename):
         df = pd.read_csv(filename)
         dates = sorted(df.iloc[:, 0].unique())
         matrix = pd.DataFrame(0, dates, dates)
@@ -36,9 +36,39 @@ class Matrix:
         for row, i in df.iterrows():
             date1 = df.iloc[row, 0]
             date2 = df.iloc[row, 1]
-            value = round(df.iloc[row, 2] * 0.5 + df.iloc[row, 3] * 0.5)
+            value = round(df.iloc[row, 2])
             matrix.loc[date1, date2] = value
             matrix.loc[date2, date1] = value
-            print(value)
-        
+        return matrix
+    
+    def get_WEIGHT_matrix_from_csv(filename):
+        df = pd.read_csv(filename)
+        dates = sorted(df.iloc[:, 0].unique())
+        matrix = pd.DataFrame(0, dates, dates)
+        min = df.iloc[:, 3].min()
+        max = df.iloc[:, 3].max()
+        for row, i in df.iterrows():
+            date1 = df.iloc[row, 0]
+            date2 = df.iloc[row, 1]
+            x_norm = (df.iloc[row, 3] - min) / (max - min)
+            matrix.loc[date1, date2] = x_norm
+            matrix.loc[date2, date1] = x_norm
+        return matrix
+    
+    def get_GED_WEIGHT_matrix_from_csv(filename):
+        df = pd.read_csv(filename)
+        dates = sorted(df.iloc[:, 0].unique())
+        matrix = pd.DataFrame(0, dates, dates)
+        minWeight = df.iloc[:, 3].min()
+        maxWeight = df.iloc[:, 3].max()
+        minGed = df.iloc[:, 2].min()
+        maxGed = df.iloc[:, 2].max()
+        for row, i in df.iterrows():
+            date1 = df.iloc[row, 0]
+            date2 = df.iloc[row, 1]
+            weight_norm = (df.iloc[row, 3] - minWeight) / (maxWeight - minWeight)
+            ged_norm = (df.iloc[row, 2] - minGed) / (maxGed - minGed)
+            value = weight_norm + ged_norm
+            matrix.loc[date1, date2] = value
+            matrix.loc[date2, date1] = value
         return matrix
