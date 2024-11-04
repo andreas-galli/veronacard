@@ -2,10 +2,15 @@ import pandas as pd
 import numpy as np
 import sklearn.cluster as skl
 import matplotlib.pyplot as plt
+import holidays
 from sklearn.metrics import silhouette_score
+from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+import matplotlib.pyplot as plt
+import kneed
 
 def KMeans_clustering():
-    distance_matrix = pd.read_csv('results_v3/flussi+struttura/2018_GED_WEIGHT_distance_matrix.csv', index_col=0)
+    distance_matrix = pd.read_csv('results_v3/2017/struttura/GED_distance_matrix.csv', index_col=0)
     
     # Un vettore per ogni data
     distance_values = distance_matrix.values
@@ -29,7 +34,8 @@ def KMeans_clustering():
     plt.grid(True)
     plt.show()
     """
-    n_clusters = 4
+
+    n_clusters = 3  
     kmeans = skl.KMeans(n_clusters=n_clusters)
     clusters = kmeans.fit_predict(distance_values)
 
@@ -39,8 +45,13 @@ def KMeans_clustering():
         'CLUSTER': clusters
     })
 
-    results.to_csv('results_v3/struttura/2018_GED_clustering.csv', index=False)
-    
+    results.to_csv('results_v3/2017/struttura/2017_GED_clustering.csv', index=False)
+
+    #AGGIUNTA DELLA COLONNA CHE INDICA IL GIORNO FESTIVO
+    df_clustering = pd.read_csv('results_v3/2017/struttura/2017_GED_clustering.csv')
+    it_holidays = holidays.IT(years=2017)
+    df_clustering['HOLIDAY'] = df_clustering['DATE'].apply(lambda x: 'YES' if pd.to_datetime(x) in it_holidays or pd.to_datetime(x).weekday() == 6 else 'NO')
+    df_clustering.to_csv('results_v3/2017/struttura/2017_GED_clustering.csv', index=False)
 
 
 # Non produce risultati soddisfacenti
@@ -69,3 +80,20 @@ def spectral_clustering():
     
     for n, score in zip(n_clusters_range, silhouette_values):
         print(f'n_clusters={n}, Silhouette Score={round(score, 2)}')
+
+def DBSCAN_clustering():
+    distance_matrix = pd.read_csv('results_v3/2018/flussi/2018_WEIGHT_distance_matrix.csv', index_col=0)
+
+    min_samples = 1
+    eps_values = [6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2]
+    cluster_results = {}
+
+    for eps in eps_values:
+        dbscan = DBSCAN(eps=eps, min_samples=min_samples, metric='precomputed')
+        clusters = dbscan.fit_predict(distance_matrix)
+        
+        n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
+        n_noise = list(clusters).count(-1)
+        cluster_results[eps] = (n_clusters, n_noise)
+
+        print(f"eps={eps}: {n_clusters} clusters, {n_noise} noise points")
