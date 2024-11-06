@@ -18,6 +18,8 @@ class Graph:
         return graph  
         
     def get_graph_image(graphs, dates):
+        graphs = graphs if graphs is not None else []
+        dates = dates if dates is not None else []
         # Per mantenere i nodi comuni nella stessa posizione nei grafi generati
         union_graph = nx.DiGraph()
         for graph in graphs:

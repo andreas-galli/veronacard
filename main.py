@@ -16,8 +16,8 @@ POIs = sorted(df.iloc[:, 4].unique())
 graphs = []
 dates = []
 
-d1 = '2018-04-01'
-d2 = '2018-03-22'
+d1 = '2018-01-10'
+d2 = '2018-01-13'
 
 m1 = Matrix.get_matrix(df[df.iloc[:, 0] == d1], POIs)
 m2 = Matrix.get_matrix(df[df.iloc[:, 0] == d2], POIs)
@@ -40,11 +40,10 @@ Graph.get_graph_image(graphs, dates)
 
 #DBSCAN_clustering()
 
-"""
 #GENERAZIONE results_v3.csv
 
 # Mantengo tutte le tuple escludendo l'anno 2020
-df_2 = df[(df.iloc[:, 0] >= '2017-01-01') & (df.iloc[:, 0] <= '2017-12-31')]
+df_2 = df[(df.iloc[:, 0] >= '2016-01-01') & (df.iloc[:, 0] <= '2016-12-31')]
 
 unique_dates = sorted(df_2.iloc[:, 0].unique())
 
@@ -57,8 +56,9 @@ for date in unique_dates:
 
 results = []
 
+"""
 # Confronto ogni coppia di grafi presente nel dataset e salvo i risultati in un csv
-with open('results_v3/2017/2017_results_v3.csv', 'w') as file:
+with open('results_v3/2016/2016_results_v3.csv', 'w') as file:
     for i in range(len(unique_dates)):
         for j in range(i + 1, len(unique_dates)):
             date1 = unique_dates[i]
@@ -77,21 +77,18 @@ with open('results_v3/2017/2017_results_v3.csv', 'w') as file:
                 'GED': approx_ged,
                 'ABS_WGED': abs_wged 
             })
-results_df = pd.DataFrame(results).to_csv('results_v3/2017/2017_results_v3.csv', index=False)
+results_df = pd.DataFrame(results).to_csv('results_v3/2016/2016_results_v3.csv', index=False)
 print("Done")
 """
-
-
-
 
 """
 # MATRICE DELLE DISTANZE USANDO COME METRICA LE STRUTTURE DEI GRAFI
 #GENERAZIONE DEL FILE distanceMatrix.csv e verifica del funzionamento
-distance_matrix = Matrix.get_GED_matrix_from_csv('results_v3/2017/2017_results_v3.csv')
-distance_matrix.to_csv('results_v3/2017/struttura/GED_distance_matrix.csv', header=True)
+distance_matrix = Matrix.get_GED_matrix_from_csv('results_v3/2016/2016_results_v3.csv')
+distance_matrix.to_csv('results_v3/2016/struttura/GED_distance_matrix.csv', header=True)
 
 # Leggi il CSV nella matrice delle distanze
-distance_matrix = pd.read_csv('results_v3/2017/struttura/GED_distance_matrix.csv', index_col=0)
+distance_matrix = pd.read_csv('results_v3/2016/struttura/GED_distance_matrix.csv', index_col=0)
 # Mostra la matrice per verificare che sia correttamente caricata
 print(distance_matrix)
 
@@ -100,37 +97,22 @@ print(distance_matrix)
 
 #MATRICE DELLE DISTANZE USANDO COME METRICA I PESI NORMALIZZATI
 #GENERAZIONE DEL FILE distanceMatrix.csv e verifica del funzionamento
-distance_matrix = Matrix.get_WEIGHT_matrix_from_csv('results_v3/2017/2017_results_v3.csv')
-distance_matrix.to_csv('results_v3/2017/flussi/WEIGHT_distance_matrix.csv', header=True)
+distance_matrix = Matrix.get_WEIGHT_matrix_from_csv('results_v3/2016/2016_results_v3.csv')
+distance_matrix.to_csv('results_v3/2016/flussi/WEIGHT_distance_matrix.csv', header=True)
 
 # Leggi il CSV nella matrice delle distanze
-distance_matrix = pd.read_csv('results_v3/2017/flussi/WEIGHT_distance_matrix.csv', index_col=0)
+distance_matrix = pd.read_csv('results_v3/2016/flussi/WEIGHT_distance_matrix.csv', index_col=0)
 
 # Mostra la matrice per verificare che sia correttamente caricata
 print(distance_matrix) 
 
-
-
-
-
 #MATRICE DELLE DISTANZE USANDO COME METRICA FLUSSI + STRUTTURA
 #GENERAZIONE DEL FILE distanceMatrix.csv e verifica del funzionamento
-distance_matrix = Matrix.get_GED_WEIGHT_matrix_from_csv('results_v3/2017/2017_results_v3.csv')
-distance_matrix.to_csv('results_v3/2017/flussi&struttura/GED_WEIGHT_distance_matrix.csv', header=True)
+distance_matrix = Matrix.get_GED_WEIGHT_matrix_from_csv('results_v3/2016/2016_results_v3.csv')
+distance_matrix.to_csv('results_v3/2016/flussi&struttura/GED_WEIGHT_distance_matrix.csv', header=True)
 
 # Leggi il CSV nella matrice delle distanze
-distance_matrix = pd.read_csv('results_v3/2017/flussi&struttura/GED_WEIGHT_distance_matrix.csv', index_col=0)
+distance_matrix = pd.read_csv('results_v3/2016/flussi&struttura/GED_WEIGHT_distance_matrix.csv', index_col=0)
 # Mostra la matrice per verificare che sia correttamente caricata
 print(distance_matrix)
-"""
-
-
-
-
-"""
-#AGGIUNTA DELLA COLONNA CHE INDICA IL GIORNO FESTIVO
-df_clustering = pd.read_csv('results_v3/2017/flussi&struttura/GED_WEIGHT_clustering.csv')
-it_holidays = holidays.IT(years=2017)
-df_clustering['HOLIDAY'] = df_clustering['DATE'].apply(lambda x: 'YES' if pd.to_datetime(x) in it_holidays or pd.to_datetime(x).weekday() == 6 else 'NO')
-df_clustering.to_csv('results_v3/flussi&struttura/2018_GED_WEIGHT_clustering_holidays.csv', index=False)
 """
