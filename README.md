@@ -1,9 +1,10 @@
 # Analisi Dataset VeronaCard
-Questo progetto analizza i dati degli spostamenti dei turisti a Verona, fornendo strumenti utili all'analisi di questi.
+Questo progetto analizza i dati degli spostamenti dei turisti a Verona tra i vari punti di interesse, fornendo strumenti utili alla loro analisi.
 
 ## Di seguito la struttura del progetto e le funzionalità dei vari file:
 
 ```
+
 veronacard/
 ├── 2017_timelines/                                    # Contiene qualche timeline generata dell'anno 2017
 │
@@ -51,9 +52,12 @@ veronacard/
 ├── clustering.py                                      # Clustering secondo K-Means
 ├── firstNMovements.py                                 # Genera csv contenente i primi 3 spostamenti fatti per ogni id_vc 
 ├── generate_results.csv                               # Generazione file 'AAAA_results.csv'
-├── log_veronaCard.csv                                 # Dataset di partenza, contenente le strisciate
+├── log_veronaCard.zip                                 # Dataset di partenza, contenente le strisciate (compresso poiché supera la dimensione massima per GitHub)
 ├── main.py                                            # Test di alcune funzionalità ed esecuzione del clustering
 ├── poi_info.csv                                       # Contiene la lista dei POI e alcune informazioni su di essi
 ├── poi_timeline.py                                    # Generazione di una timeline, parametri da impostare
 └── README.md                                          # Questo file
 ```
+## Autore
+Progetto sviluppato da Andreas Galli, durante un tirocinio presso l'Università di Verona.  
+**andreas.galli@studenti.univr.it**
