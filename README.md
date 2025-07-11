@@ -1,8 +1,11 @@
 # Analisi Dataset VeronaCard
 Questo progetto analizza i dati degli spostamenti dei turisti a Verona tra i vari punti di interesse e si basa sull'analisi del dataset **veronacard**, che tiene traccia delle strisciate dei turisti presso i punti di interesse della città di Verona.  
 La scelta è stata quella di rappresentare le giornate sottoforma di grafi, che come nodi hanno i punti di interesse, come archi il numero di spostamenti tra i punti di interesse.
-La versione finale introduce l'embedding dei grafi mediante l'utilizzo della libreria PyTorch Geometric e di una Graph Neural Network, che trasforma un grafo in un embedding, per poi procedere al clustering, con il tentativo di ottenere dei cluster che godono di una buona separazione.  
-Il lavoro è stato svolto interamente in python.
+  
+  La versione finale introduce l'embedding dei grafi mediante l'utilizzo della libreria PyTorch Geometric e di una Graph Neural Network, che trasforma un grafo in un embedding, per poi procedere al clustering, con il tentativo di ottenere dei cluster che godono di una buona separazione.  
+
+Il lavoro è stato svolto interamente in python.  
+
 Il Jupyter Notebook descrive il lavoro eseguito in modo dettagliato.
 ## Di seguito la struttura del progetto e le funzionalità dei vari file:
 
